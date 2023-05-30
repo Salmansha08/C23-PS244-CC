@@ -1,4 +1,7 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
 const router = express.Router();
 const db = require('../config');
 
@@ -19,14 +22,19 @@ router.post('/signin', async (req, res) => {
       if (user.password === password) {
         // Generate JWT token
         // Contoh menggunakan library 'jsonwebtoken'
-        const jwt = require('jsonwebtoken');
-        const secretKey = 'your-secret-key'; // Ganti dengan kunci rahasia Anda
+        
+        const secretKey = process.env.JWT_SECRET_KEY; // Ganti dengan kunci rahasia Anda
 
-        const token = jwt.sign({ email: user.email }, secretKey);
+        const token = jwt.sign({ email: user.email }, secretKey, { expiresIn: "1h" });
+
+        res.cookie("token", token, {
+          httpOnly:true
+        })
 
         res.status(200).json({ token });
       } else {
         res.status(401).json({ error: 'Password yang dimasukkan salah' });
+        delete user.password;
       }
     }
   } catch (error) {

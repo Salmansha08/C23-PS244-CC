@@ -4,9 +4,9 @@ const db = require('../config');
 
 router.post('/signup', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, name, bio, birthOfDate } = req.body;
 
-    // Tambahkan logika validasi email dan password sesuai kebutuhan
+    // Tambahkan logika validasi email, password, name, bio, dan birthOfDate sesuai kebutuhan
 
     const usersRef = db.collection('users');
     const querySnapshot = await usersRef.where('email', '==', email).get();
@@ -17,7 +17,9 @@ router.post('/signup', async (req, res) => {
       const newUser = {
         email,
         password,
-        // Tambahkan informasi pengguna lainnya jika diperlukan
+        name,
+        bio,
+        birthOfDate
       };
 
       const user = await usersRef.add(newUser);

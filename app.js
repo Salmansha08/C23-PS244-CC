@@ -4,10 +4,16 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const { cookieJwtAuth } = require('./middleware/cookieJwtAuth');
+
+var authRoutes = require('./routes/authRoutes');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-const signInUserRoutes = require('./routes/signInUser');
-const signUpUserRoutes = require('./routes/signUpUser');
+const loginUserRoutes = require('./routes/loginUser');
+const signupUserRoutes = require('./routes/signupUser');
+//const getProfileUserRoutes = require('./routes/getProfileUser');
+// updateProfileUserRoutes = require('./routes/updateProfileUser');
+//const registerUserRoutes = require('./routes/registerUser');
 
 var app = express();
 
@@ -21,10 +27,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Routes
+app.use(cookieParser());
+app.use(authRoutes);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/api', signInUserRoutes);
-app.use('/api', signUpUserRoutes);
+app.use('/api', signupUserRoutes);
+app.use('/api', loginUserRoutes);
+//app.use('/api', getProfileUserRoutes);
+//app.use('/api', updateProfileUserRoutes);
+//app.use('/api', registerUserRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
